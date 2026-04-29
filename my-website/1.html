@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aurum Table | Luxury Restaurant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+  <style>
+    :root {
+      --bg: #050505;
+      --bg-soft: #0d0b08;
+      --panel: rgba(20, 18, 14, 0.76);
+      --panel-strong: rgba(18, 15, 10, 0.92);
+      --gold: #d6aa4d;
+      --gold-bright: #ffd87a;
+      --gold-dark: #8d6622;
+      --cream: #fff4d6;
+      --muted: #b9aa8f;
+      --line: rgba(255, 216, 122, 0.22);
+      --danger: #ff6868;
+      --success: #74f0a7;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.54);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Poppins", Arial, sans-serif;
+      color: var(--cream);
+      background:
+        radial-gradient(circle at top left, rgba(214, 170, 77, 0.12), transparent 32rem),
+        radial-gradient(circle at 80% 10%, rgba(255, 216, 122, 0.08), transparent 28rem),
+        var(--bg);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: linear-gradient(rgba(255,255,255,0.024) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.85), transparent);
+      z-index: -1;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem clamp(1rem, 4vw, 4rem);
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.84), rgba(0, 0, 0, 0.16));
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255, 216, 122, 0.08);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      color: var(--gold-bright);
+      background: radial-gradient(circle, rgba(255, 216, 122, 0.2), rgba(214, 170, 77, 0.02));
+      box-shadow: 0 0 32px rgba(214, 170, 77, 0.22);
+      font-weight: 800;
+    }
+
+    .brand span {
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: clamp(0.7rem, 2vw, 1.6rem);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .nav-links a {
+      transition: color 0.25s ease, text-shadow 0.25s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--gold-bright);
+      text-shadow: 0 0 18px rgba(255, 216, 122, 0.36);
+    }
+
+    .hero {
+      min-height: 100svh;
+      position: relative;
+      display: grid;
+      align-items: center;
+      padding: 8rem clamp(1rem, 5vw, 5rem) 4rem;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,0.9), rgba(0,0,0,0.62), rgba(0,0,0,0.72)),
+        url("https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=2200&q=80") center/cover fixed;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 16rem;
+      background: linear-gradient(to bottom, transparent, var(--bg));
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 0.78fr);
+      align-items: center;
+      gap: clamp(2rem, 7vw, 7rem);
+      max-width: 1250px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      color: var(--gold-bright);
+      text-transform: uppercase;
+      letter-spacing: 0.28em;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin: 0 0 1rem;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    .hero h1 {
+      font-size: clamp(3.2rem, 8vw, 8rem);
+      line-height: 0.9;
+      margin-bottom: 1.4rem;
+      text-transform: uppercase;
+      max-width: 10ch;
+      text-shadow: 0 20px 70px rgba(0,0,0,0.82);
+    }
+
+    .hero-copy {
+      max-width: 640px;
+      color: #eadfca;
+      font-size: clamp(1rem, 1.8vw, 1.18rem);
+      line-height: 1.8;
+      margin-bottom: 2rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 999px;
+      min-height: 48px;
+      padding: 0.85rem 1.35rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      color: #080604;
+      background: linear-gradient(135deg, var(--gold-bright), var(--gold), #b77f28);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.1) inset, 0 12px 34px rgba(214, 170, 77, 0.26);
+      font-weight: 800;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.22) inset, 0 18px 46px rgba(214, 170, 77, 0.42);
+      filter: saturate(1.08);
+    }
+
+    .btn.secondary {
+      color: var(--cream);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    .dish-orbit {
+      position: relative;
+      width: min(39vw, 480px);
+      aspect-ratio: 1;
+      margin-inline: auto;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      perspective: 1100px;
+    }
+
+    .dish-orbit::before,
+    .dish-orbit::after {
+      content: "";
+      position: absolute;
+      inset: 5%;
+      border: 1px solid rgba(255, 216, 122, 0.24);
+      border-radius: 50%;
+      animation: spin 18s linear infinite;
+    }
+
+    .dish-orbit::after {
+      inset: -6%;
+      border-style: dashed;
+      opacity: 0.55;
+      animation-duration: 32s;
+      animation-direction: reverse;
+    }
+
+    .dish {
+      width: 78%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 10px solid rgba(255,255,255,0.08);
+      box-shadow: var(--shadow), 0 0 70px rgba(214, 170, 77, 0.24);
+      animation: plateFloat 7s ease-in-out infinite, spin 28s linear infinite;
+      transform-style: preserve-3d;
+    }
+
+    .section {
+      padding: clamp(4rem, 8vw, 7rem) clamp(1rem, 5vw, 5rem);
+      position: relative;
+    }
+
+    .section-inner {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-title h2 {
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 1;
+      margin-bottom: 0;
+    }
+
+    .section-title p {
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.7;
+      margin-bottom: 0;
+    }
+
+    .parallax {
+      min-height: 52vh;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      background:
+        linear-gradient(rgba(0,0,0,0.58), rgba(0,0,0,0.72)),
+        url("https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=2200&q=80") center/cover fixed;
+      border-block: 1px solid var(--line);
+    }
+
+    .parallax h2 {
+      font-size: clamp(2rem, 7vw, 5.5rem);
+      max-width: 900px;
+      margin: 0 auto 1rem;
+      text-shadow: 0 18px 60px rgba(0,0,0,0.9);
+    }
+
+    .parallax p {
+      color: #efe2c5;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.6rem;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      color: var(--cream);
+      background: rgba(255,255,255,0.045);
+      min-height: 42px;
+      border-radius: 999px;
+      padding: 0.65rem 1rem;
+      transition: all 0.22s ease;
+    }
+
+    .chip.active,
+    .chip:hover {
+      color: #080604;
+      background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+      box-shadow: 0 0 26px rgba(214, 170, 77, 0.24);
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.15rem;
+    }
+
+    .menu-card,
+    .glass-panel,
+    .history-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .menu-card {
+      border-radius: 8px;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .menu-card:hover {
+      border-color: rgba(255, 216, 122, 0.5);
+      box-shadow: 0 30px 90px rgba(0,0,0,0.62), 0 0 34px rgba(214,170,77,0.16);
+    }
+
+    .menu-img {
+      height: 220px;
+      width: 100%;
+      object-fit: cover;
+    }
+
+    .menu-body {
+      padding: 1rem;
+    }
+
+    .menu-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: start;
+      margin-bottom: 0.7rem;
+    }
+
+    .menu-meta h3 {
+      margin: 0;
+      font-size: 1.08rem;
+    }
+
+    .price {
+      color: var(--gold-bright);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .tag {
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-bottom: 1rem;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 1.2rem;
+      align-items: start;
+    }
+
+    .glass-panel {
+      border-radius: 8px;
+      padding: clamp(1rem, 3vw, 1.5rem);
+    }
+
+    .assistant-buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.7rem;
+      margin-bottom: 1rem;
+    }
+
+    .chat-box {
+      display: grid;
+      gap: 0.8rem;
+      min-height: 250px;
+      align-content: start;
+    }
+
+    .bubble {
+      max-width: 88%;
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      line-height: 1.55;
+      animation: riseIn 0.3s ease both;
+    }
+
+    .bubble.bot {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #f4e8cf;
+    }
+
+    .bubble.user {
+      justify-self: end;
+      color: #080604;
+      background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+      font-weight: 700;
+    }
+
+    .cart-list {
+      display: grid;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .cart-row,
+    .history-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.85rem;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.045);
+      border-radius: 8px;
+    }
+
+    .qty {
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--cream);
+      background: rgba(255,255,255,0.06);
+      transition: all 0.2s ease;
+    }
+
+    .icon-btn:hover {
+      color: #080604;
+      background: var(--gold-bright);
+    }
+
+    .total-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--line);
+      padding-top: 1rem;
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      font-weight: 800;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.9rem;
+      margin-top: 1rem;
+    }
+
+    .field {
+      display: grid;
+      gap: 0.38rem;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.065);
+      color: var(--cream);
+      border-radius: 8px;
+      padding: 0.82rem 0.9rem;
+      outline: none;
+      transition: border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: rgba(255,216,122,0.56);
+      box-shadow: 0 0 0 4px rgba(214,170,77,0.12);
+    }
+
+    .form-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 1rem;
+    }
+
+    .history-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .history-card {
+      border-radius: 8px;
+      padding: 1rem;
+    }
+
+    .history-card h3 {
+      margin-bottom: 0.35rem;
+      color: var(--gold-bright);
+    }
+
+    .history-card p {
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+      line-height: 1.6;
+    }
+
+    .empty {
+      color: var(--muted);
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .toast-wrap {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      z-index: 50;
+      display: grid;
+      gap: 0.75rem;
+      width: min(360px, calc(100vw - 2rem));
+    }
+
+    .toast {
+      padding: 0.95rem 1rem;
+      border-radius: 8px;
+      background: rgba(12,10,7,0.94);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      color: var(--cream);
+      animation: toastIn 0.25s ease both;
+    }
+
+    .loader {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      background: var(--bg);
+      transition: opacity 0.45s ease, visibility 0.45s ease;
+    }
+
+    .loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loader-ring {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      border: 3px solid rgba(255,255,255,0.08);
+      border-top-color: var(--gold-bright);
+      animation: spin 0.8s linear infinite;
+      box-shadow: 0 0 36px rgba(214,170,77,0.18);
+    }
+
+    footer {
+      padding: 2.5rem 1rem;
+      text-align: center;
+      color: var(--muted);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: #030303;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes plateFloat {
+      0%, 100% { translate: 0 0; }
+      50% { translate: 0 -18px; }
+    }
+
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .split {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h1 {
+        max-width: 12ch;
+      }
+
+      .dish-orbit {
+        width: min(78vw, 420px);
+      }
+
+      .menu-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .section-title {
+        align-items: start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .nav {
+        align-items: start;
+        flex-direction: column;
+        padding-block: 0.85rem;
+      }
+
+      .nav-links {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 0.2rem;
+      }
+
+      .hero {
+        padding-top: 9rem;
+        background-attachment: scroll;
+      }
+
+      .parallax {
+        background-attachment: scroll;
+      }
+
+      .menu-grid,
+      .history-grid,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .assistant-buttons {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .cart-row,
+      .history-row {
+        grid-template-columns: 1fr auto;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="loader" id="loader" aria-label="Loading">
+    <div class="loader-ring"></div>
+  </div>
+
+  <nav class="nav" aria-label="Primary navigation">
+    <a class="brand" href="#top" aria-label="Aurum Table home">
+      <span class="brand-mark">A</span>
+      <span>Aurum Table</span>
+    </a>
+    <div class="nav-links">
+      <a href="#menu">Menu</a>
+      <a href="#assistant">AI Picks</a>
+      <a href="#order">Order</a>
+      <a href="#history">History</a>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow">Black Gold Dining</p>
+        <h1>Aurum Table</h1>
+        <p class="hero-copy">A cinematic fine-dining experience with handcrafted plates, bold flavors, and a checkout flow polished enough for your most elegant midnight cravings.</p>
+        <div class="hero-actions">
+          <a class="btn" href="#menu">Order Now</a>
+          <a class="btn secondary" href="#assistant">Ask AI</a>
+        </div>
+      </div>
+      <div class="dish-orbit" aria-hidden="true">
+        <img class="dish" src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=900&q=80" alt="">
+      </div>
+    </div>
+  </header>
+
+  <section class="parallax" aria-label="Restaurant ambience">
+    <div class="section-inner">
+      <p class="eyebrow">Private chef energy</p>
+      <h2>Velvet light, golden plates, unforgettable nights.</h2>
+      <p>Scroll into a luxury ordering experience designed for rich visuals, quick decisions, smart suggestions, and instant invoice generation.</p>
+    </div>
+  </section>
+
+  <main>
+    <section class="section" id="menu">
+      <div class="section-inner">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">Signature Menu</p>
+            <h2>Curated Plates</h2>
+          </div>
+          <p>Filter the menu, add favorites to your cart, and let the assistant suggest something that matches your mood.</p>
+        </div>
+        <div class="filters" id="filters" aria-label="Menu filters"></div>
+        <div class="menu-grid" id="menuGrid"></div>
+      </div>
+    </section>
+
+    <section class="section" id="assistant">
+      <div class="section-inner">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">AI Assistant</p>
+            <h2>Craving Guide</h2>
+          </div>
+          <p>Choose a mood and the assistant will recommend menu items dynamically from the live menu data.</p>
+        </div>
+        <div class="glass-panel">
+          <div class="assistant-buttons" id="assistantButtons"></div>
+          <div class="chat-box" id="chatBox" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="order">
+      <div class="section-inner">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">Cart & Checkout</p>
+            <h2>Order Slip</h2>
+          </div>
+          <p>Your details are saved locally for quick repeat orders and can be edited before every checkout.</p>
+        </div>
+
+        <div class="split">
+          <div class="glass-panel">
+            <h3>Selected Items</h3>
+            <div class="cart-list" id="cartList"></div>
+            <div class="total-line">
+              <span>Total</span>
+              <span id="cartTotal">₹0</span>
+            </div>
+          </div>
+
+          <div class="glass-panel">
+            <h3>Guest Details</h3>
+            <form id="orderForm">
+              <div class="form-grid">
+                <div class="field">
+                  <label for="customerName">Name</label>
+                  <input id="customerName" name="customerName" autocomplete="name" required placeholder="Your name">
+                </div>
+                <div class="field">
+                  <label for="customerPhone">Phone number</label>
+                  <input id="customerPhone" name="customerPhone" autocomplete="tel" required pattern="[0-9+\-\s]{7,15}" placeholder="+91 98765 43210">
+                </div>
+                <div class="field full">
+                  <label for="customerAddress">Address</label>
+                  <textarea id="customerAddress" name="customerAddress" autocomplete="street-address" required placeholder="Delivery address"></textarea>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button class="btn secondary" type="button" id="saveDetailsBtn">Save Details</button>
+                <button class="btn" type="submit" id="checkoutBtn">Checkout & Download PDF</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="history">
+      <div class="section-inner">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">Local Archive</p>
+            <h2>Order History</h2>
+          </div>
+          <button class="btn secondary" id="clearHistoryBtn" type="button">Clear History</button>
+        </div>
+        <div class="history-grid" id="historyGrid"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Aurum Table · Luxury restaurant ordering demo · PDF invoices, localStorage history, and dynamic menu filtering
+  </footer>
+
+  <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
+
+  <script>
+    const COMPANY_NAME = "Aurum Table";
+    const STORAGE_KEYS = {
+      cart: "aurum.cart",
+      history: "aurum.orderHistory",
+      customer: "aurum.customerDetails",
+      counter: "aurum.orderCounter"
+    };
+
+    const categories = ["All", "Veg", "Non-Veg", "Desserts", "Healthy"];
+
+    const menuItems = [
+      {
+        id: 1,
+        name: "Truffle Gold Risotto",
+        category: "Veg",
+        mood: ["Hungry", "Light"],
+        price: 1299,
+        image: "https://images.unsplash.com/photo-1476124369491-e7addf5db371?auto=format&fit=crop&w=900&q=80",
+        note: "Creamy arborio rice, white truffle oil, parmesan lace."
+      },
+      {
+        id: 2,
+        name: "Saffron Paneer Steak",
+        category: "Veg",
+        mood: ["Spicy", "Hungry"],
+        price: 1099,
+        image: "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=900&q=80",
+        note: "Charred paneer, saffron butter, smoked pepper jus."
+      },
+      {
+        id: 3,
+        name: "Black Pepper Lamb",
+        category: "Non-Veg",
+        mood: ["Spicy", "Hungry"],
+        price: 1899,
+        image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=900&q=80",
+        note: "Slow seared lamb, pepper glaze, gold potato fondant."
+      },
+      {
+        id: 4,
+        name: "Royal Herb Chicken",
+        category: "Non-Veg",
+        mood: ["Hungry", "Light"],
+        price: 1499,
+        image: "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?auto=format&fit=crop&w=900&q=80",
+        note: "Tender chicken, rosemary jus, fire-roasted vegetables."
+      },
+      {
+        id: 5,
+        name: "Golden Lava Cake",
+        category: "Desserts",
+        mood: ["Hungry"],
+        price: 699,
+        image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=900&q=80",
+        note: "Warm chocolate center, edible gold dust, vanilla cream."
+      },
+      {
+        id: 6,
+        name: "Rose Pistachio Mousse",
+        category: "Desserts",
+        mood: ["Light"],
+        price: 649,
+        image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80",
+        note: "Floral mousse, pistachio crumble, berry veil."
+      },
+      {
+        id: 7,
+        name: "Glow Quinoa Bowl",
+        category: "Healthy",
+        mood: ["Healthy", "Light"],
+        price: 899,
+        image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=80",
+        note: "Quinoa, avocado, greens, citrus-gold vinaigrette."
+      },
+      {
+        id: 8,
+        name: "Charcoal Salmon Salad",
+        category: "Healthy",
+        mood: ["Healthy", "Spicy"],
+        price: 1599,
+        image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=900&q=80",
+        note: "Salmon, baby leaves, toasted seeds, chili lime dressing."
+      },
+      {
+        id: 9,
+        name: "Midnight Sushi Platter",
+        category: "Non-Veg",
+        mood: ["Light", "Healthy"],
+        price: 1799,
+        image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=900&q=80",
+        note: "Chef selection sushi, wasabi pearls, soy lacquer."
+      }
+    ];
+
+    const state = {
+      activeCategory: "All",
+      cart: readJSON(STORAGE_KEYS.cart, []),
+      history: readJSON(STORAGE_KEYS.history, []),
+      customer: readJSON(STORAGE_KEYS.customer, {})
+    };
+
+    const elements = {};
+
+    document.addEventListener("DOMContentLoaded", init);
+
+    function init() {
+      cacheElements();
+      bindEvents();
+      hydrateCustomerForm();
+      renderFilters();
+      renderMenu();
+      renderCart();
+      renderAssistant();
+      renderHistory();
+      setTimeout(() => elements.loader.classList.add("hidden"), 500);
+    }
+
+    function cacheElements() {
+      elements.loader = document.getElementById("loader");
+      elements.filters = document.getElementById("filters");
+      elements.menuGrid = document.getElementById("menuGrid");
+      elements.assistantButtons = document.getElementById("assistantButtons");
+      elements.chatBox = document.getElementById("chatBox");
+      elements.cartList = document.getElementById("cartList");
+      elements.cartTotal = document.getElementById("cartTotal");
+      elements.orderForm = document.getElementById("orderForm");
+      elements.saveDetailsBtn = document.getElementById("saveDetailsBtn");
+      elements.checkoutBtn = document.getElementById("checkoutBtn");
+      elements.historyGrid = document.getElementById("historyGrid");
+      elements.clearHistoryBtn = document.getElementById("clearHistoryBtn");
+      elements.toastWrap = document.getElementById("toastWrap");
+      elements.customerName = document.getElementById("customerName");
+      elements.customerPhone = document.getElementById("customerPhone");
+      elements.customerAddress = document.getElementById("customerAddress");
+    }
+
+    function bindEvents() {
+      elements.saveDetailsBtn.addEventListener("click", saveCustomerDetails);
+      elements.orderForm.addEventListener("submit", checkout);
+      elements.clearHistoryBtn.addEventListener("click", clearHistory);
+      window.addEventListener("scroll", updateParallaxGlow, { passive: true });
+    }
+
+    function readJSON(key, fallback) {
+      try {
+        return JSON.parse(localStorage.getItem(key)) ?? fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    function writeJSON(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    function money(value) {
+      return new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "INR",
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function invoiceMoney(value) {
+      return `INR ${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(value)}`;
+    }
+
+    function renderFilters() {
+      elements.filters.innerHTML = categories.map(category => `
+        <button class="chip ${category === state.activeCategory ? "active" : ""}" type="button" data-category="${category}">
+          ${category}
+        </button>
+      `).join("");
+
+      elements.filters.querySelectorAll("button").forEach(button => {
+        button.addEventListener("click", () => {
+          state.activeCategory = button.dataset.category;
+          renderFilters();
+          renderMenu();
+        });
+      });
+    }
+
+    function renderMenu() {
+      const visibleItems = state.activeCategory === "All"
+        ? menuItems
+        : menuItems.filter(item => item.category === state.activeCategory);
+
+      elements.menuGrid.innerHTML = visibleItems.map(item => `
+        <article class="menu-card tilt-card">
+          <img class="menu-img" src="${item.image}" alt="${item.name}">
+          <div class="menu-body">
+            <div class="menu-meta">
+              <h3>${item.name}</h3>
+              <span class="price">${money(item.price)}</span>
+            </div>
+            <p class="tag">${item.category} · ${item.note}</p>
+            <button class="btn" type="button" data-add="${item.id}">Add to Cart</button>
+          </div>
+        </article>
+      `).join("");
+
+      elements.menuGrid.querySelectorAll("[data-add]").forEach(button => {
+        button.addEventListener("click", () => addToCart(Number(button.dataset.add)));
+      });
+
+      attachTiltEffects();
+    }
+
+    function attachTiltEffects() {
+      document.querySelectorAll(".tilt-card").forEach(card => {
+        card.addEventListener("mousemove", event => {
+          const rect = card.getBoundingClientRect();
+          const x = event.clientX - rect.left;
+          const y = event.clientY - rect.top;
+          const rotateY = ((x / rect.width) - 0.5) * 10;
+          const rotateX = ((y / rect.height) - 0.5) * -10;
+          card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
+        });
+
+        card.addEventListener("mouseleave", () => {
+          card.style.transform = "perspective(900px) rotateX(0) rotateY(0) translateY(0)";
+        });
+      });
+    }
+
+    function addToCart(id) {
+      const existing = state.cart.find(item => item.id === id);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        const item = menuItems.find(menuItem => menuItem.id === id);
+        state.cart.push({ id: item.id, qty: 1 });
+      }
+
+      persistCart();
+      renderCart();
+      toast("Added to cart");
+    }
+
+    function removeFromCart(id) {
+      state.cart = state.cart.filter(item => item.id !== id);
+      persistCart();
+      renderCart();
+    }
+
+    function changeQty(id, delta) {
+      const item = state.cart.find(cartItem => cartItem.id === id);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) {
+        removeFromCart(id);
+        return;
+      }
+      persistCart();
+      renderCart();
+    }
+
+    function persistCart() {
+      writeJSON(STORAGE_KEYS.cart, state.cart);
+    }
+
+    function cartDetails() {
+      return state.cart.map(cartItem => {
+        const item = menuItems.find(menuItem => menuItem.id === cartItem.id);
+        return { ...item, qty: cartItem.qty, lineTotal: item.price * cartItem.qty };
+      });
+    }
+
+    function cartTotal() {
+      return cartDetails().reduce((sum, item) => sum + item.lineTotal, 0);
+    }
+
+    function renderCart() {
+      const details = cartDetails();
+
+      if (!details.length) {
+        elements.cartList.innerHTML = `<div class="empty">Your cart is waiting for something beautiful.</div>`;
+      } else {
+        elements.cartList.innerHTML = details.map(item => `
+          <div class="cart-row">
+            <div>
+              <strong>${item.name}</strong>
+              <div class="qty">${money(item.price)} · Qty ${item.qty}</div>
+            </div>
+            <div>
+              <button class="icon-btn" type="button" data-qty="${item.id}" data-delta="-1" aria-label="Decrease ${item.name}">−</button>
+              <button class="icon-btn" type="button" data-qty="${item.id}" data-delta="1" aria-label="Increase ${item.name}">+</button>
+            </div>
+            <button class="icon-btn" type="button" data-remove="${item.id}" aria-label="Remove ${item.name}">×</button>
+          </div>
+        `).join("");
+      }
+
+      elements.cartTotal.textContent = money(cartTotal());
+
+      elements.cartList.querySelectorAll("[data-remove]").forEach(button => {
+        button.addEventListener("click", () => removeFromCart(Number(button.dataset.remove)));
+      });
+      elements.cartList.querySelectorAll("[data-qty]").forEach(button => {
+        button.addEventListener("click", () => changeQty(Number(button.dataset.qty), Number(button.dataset.delta)));
+      });
+    }
+
+    function renderAssistant() {
+      const moods = ["Hungry", "Light", "Spicy", "Healthy"];
+      elements.assistantButtons.innerHTML = moods.map(mood => `
+        <button class="chip" type="button" data-mood="${mood}">${mood}</button>
+      `).join("");
+
+      elements.chatBox.innerHTML = `
+        <div class="bubble bot">Welcome to Aurum AI. Choose your mood and I will suggest a plate from tonight's menu.</div>
+      `;
+
+      elements.assistantButtons.querySelectorAll("button").forEach(button => {
+        button.addEventListener("click", () => suggestForMood(button.dataset.mood));
+      });
+    }
+
+    function suggestForMood(mood) {
+      const picks = menuItems.filter(item => item.mood.includes(mood)).slice(0, 3);
+      elements.chatBox.insertAdjacentHTML("beforeend", `<div class="bubble user">${mood}</div>`);
+
+      const suggestions = picks.map(item => `${item.name} (${money(item.price)})`).join(", ");
+      elements.chatBox.insertAdjacentHTML("beforeend", `
+        <div class="bubble bot">For a ${mood.toLowerCase()} mood, I recommend ${suggestions}. ${picks[0] ? `<button class="btn" type="button" data-add="${picks[0].id}">Add ${picks[0].name}</button>` : ""}</div>
+      `);
+
+      elements.chatBox.querySelectorAll("[data-add]").forEach(button => {
+        button.onclick = () => addToCart(Number(button.dataset.add));
+      });
+      elements.chatBox.scrollTop = elements.chatBox.scrollHeight;
+    }
+
+    function hydrateCustomerForm() {
+      elements.customerName.value = state.customer.name || "";
+      elements.customerPhone.value = state.customer.phone || "";
+      elements.customerAddress.value = state.customer.address || "";
+    }
+
+    function getCustomerDetails() {
+      return {
+        name: elements.customerName.value.trim(),
+        phone: elements.customerPhone.value.trim(),
+        address: elements.customerAddress.value.trim()
+      };
+    }
+
+    function saveCustomerDetails() {
+      if (!elements.orderForm.reportValidity()) return;
+      state.customer = getCustomerDetails();
+      writeJSON(STORAGE_KEYS.customer, state.customer);
+      toast("Guest details saved");
+    }
+
+    async function checkout(event) {
+      event.preventDefault();
+      if (!state.cart.length) {
+        toast("Add at least one item before checkout");
+        return;
+      }
+      if (!elements.orderForm.reportValidity()) return;
+
+      state.customer = getCustomerDetails();
+      writeJSON(STORAGE_KEYS.customer, state.customer);
+
+      const order = createOrder();
+      state.history.unshift(order);
+      writeJSON(STORAGE_KEYS.history, state.history);
+
+      try {
+        await generateInvoice(order);
+        console.log("Simulated WhatsApp/system slip sent:", order);
+        toast(`Order ${order.orderNo} placed. PDF downloaded and slip sent.`);
+      } catch (error) {
+        console.error(error);
+        toast("Order saved, but PDF could not be generated. Check jsPDF loading.");
+      }
+
+      state.cart = [];
+      persistCart();
+      renderCart();
+      renderHistory();
+    }
+
+    function createOrder() {
+      const counter = Number(localStorage.getItem(STORAGE_KEYS.counter) || "1000") + 1;
+      localStorage.setItem(STORAGE_KEYS.counter, String(counter));
+
+      return {
+        orderNo: `AT-${counter}`,
+        slipNo: `SLIP-${Date.now().toString(36).toUpperCase()}`,
+        date: new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }),
+        customer: { ...state.customer },
+        items: cartDetails(),
+        total: cartTotal()
+      };
+    }
+
+    async function generateInvoice(order) {
+      if (!window.jspdf?.jsPDF) {
+        throw new Error("jsPDF is not loaded");
+      }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: "pt", format: "a4" });
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 46;
+      const logo = makeLogoImage();
+      const watermark = makeWatermarkImage();
+
+      doc.setFillColor(5, 5, 5);
+      doc.rect(0, 0, pageWidth, pageHeight, "F");
+      doc.addImage(watermark, "PNG", 80, 155, 440, 440, undefined, "FAST");
+
+      doc.setFillColor(17, 14, 9);
+      doc.roundedRect(margin, margin, pageWidth - margin * 2, pageHeight - margin * 2, 18, 18, "F");
+      doc.setDrawColor(214, 170, 77);
+      doc.setLineWidth(1.4);
+      doc.roundedRect(margin, margin, pageWidth - margin * 2, pageHeight - margin * 2, 18, 18, "S");
+
+      doc.addImage(logo, "PNG", margin + 22, margin + 22, 62, 62, undefined, "FAST");
+      doc.setTextColor(255, 216, 122);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(26);
+      doc.text(COMPANY_NAME, margin + 98, margin + 48);
+
+      doc.setTextColor(235, 222, 194);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
+      doc.text("Luxury Dining Invoice", margin + 100, margin + 67);
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(12);
+      doc.text(`Order: ${order.orderNo}`, pageWidth - margin - 154, margin + 40);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Slip: ${order.slipNo}`, pageWidth - margin - 154, margin + 58);
+      doc.text(order.date, pageWidth - margin - 154, margin + 76);
+
+      doc.setDrawColor(214, 170, 77);
+      doc.line(margin + 22, margin + 105, pageWidth - margin - 22, margin + 105);
+
+      let y = margin + 135;
+      doc.setTextColor(255, 216, 122);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(13);
+      doc.text("Guest Details", margin + 22, y);
+
+      y += 22;
+      doc.setTextColor(244, 232, 207);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(11);
+      doc.text(`Name: ${order.customer.name}`, margin + 22, y);
+      y += 18;
+      doc.text(`Phone: ${order.customer.phone}`, margin + 22, y);
+      y += 18;
+      doc.text(`Address: ${order.customer.address}`, margin + 22, y, { maxWidth: pageWidth - margin * 2 - 44 });
+
+      y += 42;
+      doc.setFillColor(214, 170, 77);
+      doc.roundedRect(margin + 22, y, pageWidth - margin * 2 - 44, 34, 8, 8, "F");
+      doc.setTextColor(8, 6, 4);
+      doc.setFont("helvetica", "bold");
+      doc.text("Item", margin + 38, y + 22);
+      doc.text("Qty", pageWidth - margin - 170, y + 22);
+      doc.text("Amount", pageWidth - margin - 98, y + 22);
+
+      y += 52;
+      order.items.forEach(item => {
+        doc.setTextColor(244, 232, 207);
+        doc.setFont("helvetica", "bold");
+        doc.text(item.name, margin + 38, y);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(185, 170, 143);
+        doc.text(item.category, margin + 38, y + 15);
+        doc.setTextColor(244, 232, 207);
+        doc.text(String(item.qty), pageWidth - margin - 160, y);
+        doc.text(invoiceMoney(item.lineTotal), pageWidth - margin - 110, y);
+        doc.setDrawColor(68, 54, 29);
+        doc.line(margin + 36, y + 28, pageWidth - margin - 36, y + 28);
+        y += 48;
+      });
+
+      doc.setFillColor(30, 24, 15);
+      doc.roundedRect(pageWidth - margin - 220, y + 10, 176, 48, 10, 10, "F");
+      doc.setTextColor(255, 216, 122);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(15);
+      doc.text("Total", pageWidth - margin - 196, y + 40);
+      doc.text(invoiceMoney(order.total), pageWidth - margin - 110, y + 40);
+
+      doc.setTextColor(185, 170, 143);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.text("Auto-generated by Aurum Table checkout. Slip simulated to WhatsApp/system.", margin + 22, pageHeight - margin - 26);
+
+      doc.save(`${order.orderNo}-invoice.pdf`);
+    }
+
+    function makeLogoImage() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 240;
+      canvas.height = 240;
+      const ctx = canvas.getContext("2d");
+      const gradient = ctx.createRadialGradient(120, 120, 18, 120, 120, 115);
+      gradient.addColorStop(0, "#fff0b0");
+      gradient.addColorStop(0.56, "#d6aa4d");
+      gradient.addColorStop(1, "#6b4612");
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(120, 120, 112, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "#1a1207";
+      ctx.lineWidth = 10;
+      ctx.stroke();
+      ctx.fillStyle = "#080604";
+      ctx.font = "bold 112px Poppins, Arial";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("A", 120, 126);
+      return canvas.toDataURL("image/png");
+    }
+
+    function makeWatermarkImage() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 720;
+      canvas.height = 720;
+      const ctx = canvas.getContext("2d");
+      ctx.globalAlpha = 0.12;
+      ctx.strokeStyle = "#d6aa4d";
+      ctx.lineWidth = 12;
+      ctx.beginPath();
+      ctx.arc(360, 360, 250, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.font = "bold 118px Poppins, Arial";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "#ffd87a";
+      ctx.rotate(-0.22);
+      ctx.fillText("AURUM", 270, 430);
+      ctx.font = "52px Poppins, Arial";
+      ctx.fillText("TABLE", 270, 500);
+      return canvas.toDataURL("image/png");
+    }
+
+    function renderHistory() {
+      if (!state.history.length) {
+        elements.historyGrid.innerHTML = `<div class="empty">No orders yet. Your first invoice will appear here after checkout.</div>`;
+        return;
+      }
+
+      elements.historyGrid.innerHTML = state.history.map(order => `
+        <article class="history-card">
+          <h3>${order.orderNo}</h3>
+          <p>${order.date}</p>
+          <p>${order.items.map(item => `${item.name} × ${item.qty}`).join(", ")}</p>
+          <strong>${money(order.total)}</strong>
+        </article>
+      `).join("");
+    }
+
+    function clearHistory() {
+      state.history = [];
+      writeJSON(STORAGE_KEYS.history, state.history);
+      renderHistory();
+      toast("Order history cleared");
+    }
+
+    function updateParallaxGlow() {
+      const progress = Math.min(window.scrollY / 900, 1);
+      document.documentElement.style.setProperty("--scroll-glow", progress.toFixed(2));
+    }
+
+    function toast(message) {
+      const item = document.createElement("div");
+      item.className = "toast";
+      item.textContent = message;
+      elements.toastWrap.appendChild(item);
+      setTimeout(() => item.remove(), 3600);
+    }
+  </script>
+</body>
+</html>
